@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="mg">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>✈️ AVIATOR PRÉDICTIONS</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Courier New', monospace;
+        }
+        body {
+            background: #0a0c14;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 16px;
+        }
+        .card {
+            max-width: 450px;
+            width: 100%;
+            background: #111a24;
+            border: 2px solid #3a4e6b;
+            border-radius: 28px;
+            padding: 24px 20px;
+            box-shadow: 0 0 30px #0055ff30;
+        }
+        .title {
+            color: #ffb347;
+            font-size: 28px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 16px;
+            text-shadow: 0 0 10px orange;
+            letter-spacing: 1px;
+        }
+        .section {
+            background: #0f1a26;
+            border-radius: 20px;
+            padding: 16px;
+            margin-bottom: 20px;
+            border-left: 6px solid #faa833;
+        }
+        .label {
+            color: #a3c6e9;
+            font-size: 14px;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+        .heure-ref {
+            background: #1e2e42;
+            border-radius: 50px;
+            padding: 12px 20px;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            font-size: 36px;
+            font-weight: 800;
+            color: #b0e57c;
+            border: 2px solid #6a9e4b;
+            margin: 10px 0;
+        }
+        .heure-ref span {
+            background: #0d1a2a;
+            padding: 5px 15px;
+            border-radius: 30px;
+            font-size: 40px;
+        }
+        .grid-3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 8px;
+            margin: 15px 0;
+            text-align: center;
+        }
+        .grid-item {
+            background: #162536;
+            border-radius: 16px;
+            padding: 10px 5px;
+            border: 1px solid #f5a623;
+        }
+        .grid-item .top {
+            color: #8ab3ff;
+            font-size: 12px;
+        }
+        .grid-item .value {
+            color: #fdb750;
+            font-size: 32px;
+            font-weight: 800;
+            line-height: 1.2;
+        }
+        .btn-calc {
+            background: #d97827;
+            border: none;
+            border-bottom: 5px solid #8e4d10;
+            color: white;
+            font-size: 24px;
+            font-weight: 800;
+            padding: 18px 0;
+            width: 100%;
+            border-radius: 60px;
+            margin: 15px 0;
+            cursor: pointer;
+            box-shadow: 0 8px 0 #633a0b;
+            transition: 0.1s;
+            letter-spacing: 2px;
+        }
+        .btn-calc:active {
+            transform: translateY(8px);
+            border-bottom-width: 2px;
+        }
+        .result-box {
+            background: #0b1b2b;
+            border-radius: 40px;
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 15px 0;
+            border: 2px solid #faa833;
+        }
+        .result-box .label {
+            font-size: 16px;
+            margin: 0;
+        }
+        .result-box .value {
+            background: #1f3249;
+            padding: 8px 25px;
+            border-radius: 60px;
+            font-size: 32px;
+            font-weight: 800;
+            color: #b0e57c;
+        }
+        .warning {
+            background: #2d1f2d;
+            border-left: 6px solid #ff6b6b;
+            padding: 16px;
+            border-radius: 20px;
+            color: #ffb5b5;
+            font-size: 14px;
+            margin: 15px 0;
+            font-style: italic;
+        }
+        .history-title {
+            color: #ffd966;
+            font-size: 18px;
+            margin: 15px 0 10px;
+        }
+        .history-list {
+            background: #0f1a26;
+            border-radius: 20px;
+            padding: 15px;
+        }
+        .history-item {
+            display: flex;
+            justify-content: space-between;
+            background: #1d2d40;
+            padding: 12px 16px;
+            border-radius: 40px;
+            margin: 8px 0;
+            color: #fec280;
+            font-size: 18px;
+            font-weight: bold;
+            border: 1px solid #f5a623;
+        }
+        .footer {
+            color: #516e8a;
+            text-align: center;
+            margin-top: 20px;
+            font-size: 11px;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <div class="title">✈️ AVIATOR PRÉDICTIONS</div>
+
+        <!-- HEURE DE RÉFÉRENCE -->
+        <div class="section">
+            <div class="label">⏰ HEURE DE RÉFÉRENCE (HH:MM:SS)</div>
+            <div class="heure-ref" id="heureRef">
+                <span>16</span> : <span>06</span> : <span>00</span>
+            </div>
+        </div>
+
+        <!-- 1ER HEX · DERNIER DÉC · TAIL HEX -->
+        <div class="grid-3">
+            <div class="grid-item">
+                <div class="top">1ER HEX</div>
+                <div class="value" id="premierHex">1</div>
+            </div>
+            <div class="grid-item">
+                <div class="top">DERNIER DÉC.</div>
+                <div class="value" id="dernierDec">6</div>
+            </div>
+            <div class="grid-item">
+                <div class="top">TAIL HEX</div>
+                <div class="value" id="tailHex">e7</div>
+            </div>
+        </div>
+
+        <!-- BOUTON CALCULER -->
+        <button class="btn-calc" id="calculerBtn">🔮 CALCULER POINT D'ENTRÉE</button>
+
+        <!-- RÉSULTAT GÉNÉRÉ -->
+        <div class="result-box">
+            <span class="label">📊 RÉSULTAT GÉNÉRÉ</span>
+            <span class="value" id="resultatGenere">16:08:15</span>
+        </div>
+
+        <!-- WARNING / NOTIFICATION -->
+        <div class="warning" id="warningMsg">
+            ⚠️ RAHA ROSE ROA MIFANESY NO EO ALOHANY DIA AZA MIDITRA FA MAKÂ HAFA FA METY HO RAFALE NO EO. FA ASAKASAKAO IHANY IO
+        </div>
+
+        <!-- HISTORIQUE DES 10 DERNIERS -->
+        <div class="history-title">📋 HISTORIQUE DES 10 DERNIERS</div>
+        <div class="history-list" id="historyContainer">
+            <div class="history-item">
+                <span>Réf: 16:06:00</span>
+                <span>16:08:15</span>
+            </div>
+        </div>
+
+        <div class="footer">
+            ⏱️ Calcul basé sur HEX + Dernier Décimal + Tail Hex
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            // DOM elements
+            const heureRefHeure = document.getElementById('heureRef').children[0];
+            const heureRefMin = document.getElementById('heureRef').children[2];
+            const heureRefSec = document.getElementById('heureRef').children[4];
+            
+            const premierHexEl = document.getElementById('premierHex');
+            const dernierDecEl = document.getElementById('dernierDec');
+            const tailHexEl = document.getElementById('tailHex');
+            
+            const resultatEl = document.getElementById('resultatGenere');
+            const warningMsg = document.getElementById('warningMsg');
+            const historyContainer = document.getElementById('historyContainer');
+
+            // Historique (max 10)
+            let history = [];
+
+            // Fonction pour générer des valeurs aléatoires (hex, decimal)
+            function genererValeurs() {
+                // 1ER HEX: 0-9 ou A-F (premier caractère hex)
+                const hexChars = '0123456789ABCDEF';
+                const premier = hexChars[Math.floor(Math.random() * 16)];
+                
+                // DERNIER DÉC: 0-9
+                const dernier = Math.floor(Math.random() * 10).toString();
+                
+                // TAIL HEX: deux caractères hex (00-FF)
+                const tail1 = hexChars[Math.floor(Math.random() * 16)];
+                const tail2 = hexChars[Math.floor(Math.random() * 16)];
+                const tail = tail1 + tail2;
+                
+                return { premier, dernier, tail };
+            }
+
+            // Fonction pour générer heure référence aléatoire
+            function genererHeureRef() {
+                const h = String(Math.floor(Math.random() * 24)).padStart(2, '0');
+                const m = String(Math.floor(Math.random() * 60)).padStart(2, '0');
+                const s = String(Math.floor(Math.random() * 60)).padStart(2, '0');
+                return { h, m, s };
+            }
+
+            // Fonction pour calculer résultat à partir des valeurs
+            function calculerResultat(heureRefObj, premier, dernier, tail) {
+                // Convertir les valeurs
+                const premierHexVal = parseInt(premier, 16); // 0-15
+                const dernierDecVal = parseInt(dernier, 10); // 0-9
+                const tailHexVal = parseInt(tail, 16); // 0-255
+                
+                // Heure de référence en secondes
+                let totalSecondesRef = parseInt(heureRefObj.h) * 3600 + 
+                                      parseInt(heureRefObj.m) * 60 + 
+                                      parseInt(heureRefObj.s);
+                
+                // Calcul: ajouter (premierHex + dernierDec + tailHex) secondes
+                // ou minute? Apetraka secondes mba tsy hihoatra loatra
+                let ajout = premierHexVal + dernierDecVal + (tailHexVal % 60); // modulo 60 mba tsy be loatra
+                
+                // Raha te hampitovy amin'ny sary (16:06:00 → 16:08:15) dia 2min15s = 135s
+                // Mba hahazoana 2min15 eo ho eo, ampiana 120 + 15
+                // Azonao ovaina izany raha tiana
+                
+                // Atao 1-3 minitra eo ho eo
+                let totalSecondesResult = totalSecondesRef + 60 + ajout; // +1min de base + ajout
+                
+                // Raha mihoatra 24h
+                if (totalSecondesResult >= 86400) {
+                    totalSecondesResult -= 86400;
+                }
+                
+                const h = Math.floor(totalSecondesResult / 3600);
+                const m = Math.floor((totalSecondesResult % 3600) / 60);
+                const s = totalSecondesResult % 60;
+                
+                return {
+                    h: String(h).padStart(2, '0'),
+                    m: String(m).padStart(2, '0'),
+                    s: String(s).padStart(2, '0')
+                };
+            }
+
+            // Vérifier condition "ROSE ROA MIFANESY"
+            function verifierCondition(premier, dernier, tail) {
+                // ROSE = ? Mety ho loko na isa? Atao hoe raha premier sy dernier mitovy
+                if (premier === dernier) {
+                    return "⚠️ ROSE ROA MIFANESY! Aza miditra fa mafà hafa mety ho rafale no eo.";
+                }
+                // Raha premier sy tail misy mitovy
+                if (premier === tail[0] || premier === tail[1]) {
+                    return "⚠️ ROSE ROA MIFANESY! Aza miditra fa mafà hafa mety ho rafale no eo.";
+                }
+                return null;
+            }
+
+            // Mettre à jour l'affichage
+            function updateAll() {
+                // Générer heure référence aléatoire
+                const ref = genererHeureRef();
+                heureRefHeure.textContent = ref.h;
+                heureRefMin.textContent = ref.m;
+                heureRefSec.textContent = ref.s;
+                
+                // Générer valeurs hex/décimal
+                const valeurs = genererValeurs();
+                premierHexEl.textContent = valeurs.premier;
+                dernierDecEl.textContent = valeurs.dernier;
+                tailHexEl.textContent = valeurs.tail;
+                
+                // Calculer résultat
+                const resultat = calculerResultat(ref, valeurs.premier, valeurs.dernier, valeurs.tail);
+                const resultatStr = `${resultat.h}:${resultat.m}:${resultat.s}`;
+                resultatEl.textContent = resultatStr;
+                
+                // Vérifier condition
+                const warning = verifierCondition(valeurs.premier, valeurs.dernier, valeurs.tail);
+                if (warning) {
+                    warningMsg.innerHTML = `⚠️ ${warning}`;
+                    warningMsg.style.background = '#2d1f2d';
+                    warningMsg.style.borderLeftColor = '#ff6b6b';
+                } else {
+                    warningMsg.innerHTML = '✅ TSY MISY ROSE MIFANESY — azo idirana';
+                    warningMsg.style.background = '#1a2f2a';
+                    warningMsg.style.borderLeftColor = '#6fda6f';
+                }
+                
+                // Ajouter à l'historique
+                const refStr = `${ref.h}:${ref.m}:${ref.s}`;
+                const historyItem = `<div class="history-item"><span>Réf: ${refStr}</span><span>${resultatStr}</span></div>`;
+                
+                history.unshift(historyItem);
+                if (history.length > 10) history.pop();
+                
+                historyContainer.innerHTML = history.join('');
+            }
+
+            // Bouton calculer
+            document.getElementById('calculerBtn').addEventListener('click', updateAll);
+
+            // Initialisation
+            updateAll();
+        })();
+    </script>
+</body>
+</html>
