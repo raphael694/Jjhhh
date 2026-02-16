@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="mg">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>✈️ PREDICTOR AVIATOR (Hex → Heure)</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Courier New', monospace;
+        }
+        body {
+            background: #0a0f1e;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 16px;
+        }
+        .card {
+            max-width: 420px;
+            width: 100%;
+            background: #111927;
+            border: 2px solid #2a3a5a;
+            border-radius: 24px;
+            padding: 24px 20px;
+            box-shadow: 0 0 30px #00a6ff30;
+        }
+        .title {
+            color: #ffd966;
+            font-size: 28px;
+            font-weight: bold;
+            text-align: center;
+            letter-spacing: 2px;
+            margin-bottom: 8px;
+            text-shadow: 0 0 10px #ffae00;
+        }
+        .sub {
+            display: flex;
+            justify-content: space-between;
+            color: #7e9bb5;
+            font-size: 12px;
+            border-bottom: 1px dashed #3e5a77;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        .multiplier-box {
+            background: #0e1625;
+            border-radius: 20px;
+            padding: 20px;
+            text-align: center;
+            border: 2px solid #ffaa33;
+            margin-bottom: 20px;
+        }
+        .label {
+            color: #a3c6e9;
+            font-size: 14px;
+            letter-spacing: 2px;
+        }
+        .value {
+            font-size: 70px;
+            font-weight: 800;
+            color: #fdb750;
+            line-height: 1;
+            text-shadow: 0 0 20px #f57c00;
+        }
+        .value small {
+            font-size: 24px;
+        }
+        .hex-time-container {
+            background: #0b1322;
+            border-radius: 40px;
+            padding: 16px 20px;
+            margin: 20px 0;
+            border: 1px solid #3e6390;
+        }
+        .row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 8px 0;
+        }
+        .hex {
+            background: #1e2a3a;
+            padding: 8px 16px;
+            border-radius: 40px;
+            color: #9ef0ff;
+            font-size: 24px;
+            font-weight: bold;
+            letter-spacing: 4px;
+            border: 1px solid cyan;
+            font-family: monospace;
+        }
+        .time {
+            background: #1a293b;
+            padding: 6px 16px;
+            border-radius: 40px;
+            color: #b0e57c;
+            font-size: 20px;
+            font-weight: bold;
+            border: 1px solid #8bc34a;
+        }
+        .button-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin: 24px 0 16px;
+        }
+        .btn {
+            background: #1f3249;
+            border: none;
+            border-bottom: 4px solid #0f1a28;
+            color: white;
+            font-size: 18px;
+            font-weight: 600;
+            padding: 14px 0;
+            border-radius: 60px;
+            cursor: pointer;
+            transition: 0.1s;
+            box-shadow: 0 6px 0 #0a121e;
+        }
+        .btn:active {
+            transform: translateY(6px);
+            border-bottom-width: 2px;
+        }
+        .btn-orange {
+            background: #d97827;
+            border-bottom-color: #7e4514;
+        }
+        .btn-green {
+            background: #2d6e4a;
+            border-bottom-color: #17432b;
+        }
+        .history {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 20px;
+            min-height: 50px;
+            padding: 10px 0;
+        }
+        .history-item {
+            background: #162433;
+            border: 1px solid #f5a623;
+            border-radius: 40px;
+            padding: 6px 16px;
+            font-size: 16px;
+            font-weight: bold;
+            color: #fec280;
+            white-space: nowrap;
+        }
+        .footer {
+            color: #516e8a;
+            font-size: 11px;
+            text-align: center;
+            margin-top: 16px;
+            border-top: 1px solid #253c54;
+            padding-top: 16px;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <div class="title">✈️ PREDICTOR</div>
+        <div class="sub">
+            <span>Hex → Heure Départ & Arrivé</span>
+            <span id="randomLive">Math.random = 0.492</span>
+        </div>
+
+        <!-- PREDICTED MULTIPLIER -->
+        <div class="multiplier-box">
+            <div class="label">PREDICTED MULTIPLIER</div>
+            <div class="value" id="multiplier">23.45<small>x</small></div>
+        </div>
+
+        <!-- HEX 3 CASSES -->
+        <div class="hex-time-container">
+            <div class="row">
+                <span class="label">🔢 HEX (3 casses)</span>
+                <span class="hex" id="hexValue">4A 7F 2C</span>
+            </div>
+            <div class="row">
+                <span class="label">🕒 DÉPART (Hex → Heure)</span>
+                <span class="time" id="heureDepart">04:??:??</span>
+            </div>
+            <div class="row">
+                <span class="label">🛬 ARRIVÉ (+30–90min)</span>
+                <span class="time" id="heureArrive">05:??:??</span>
+            </div>
+        </div>
+
+        <!-- RESULT / CALCULATION -->
+        <div style="background:#0d1a28; border-radius:40px; padding:12px 20px; margin:10px 0; border-left:6px solid #faa833;">
+            <div class="row">
+                <span class="label">📊 RESULT / CALCULATION</span>
+                <span class="value" style="font-size:28px;" id="result">23.45x</span>
+            </div>
+        </div>
+
+        <!-- BOUTONS -->
+        <div class="button-grid">
+            <button class="btn btn-orange" id="predictBtn">🔮 PREDICT</button>
+            <button class="btn" id="multiplierBtn">✖️ MULTIPLIER</button>
+            <button class="btn btn-green" id="calculationBtn">📐 CALCULATION</button>
+            <button class="btn" id="mathRandomBtn">🎲 Math.Random</button>
+        </div>
+
+        <!-- HISTORY -->
+        <div class="history" id="historyContainer"></div>
+        <div class="footer">
+            ⏱️ Heure = extrait des 3 casses HEX • arrivée +30–90min
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            // Elements
+            const multiplierEl = document.getElementById('multiplier');
+            const resultEl = document.getElementById('result');
+            const hexEl = document.getElementById('hexValue');
+            const departEl = document.getElementById('heureDepart');
+            const arriveEl = document.getElementById('heureArrive');
+            const randomLiveEl = document.getElementById('randomLive');
+            const historyContainer = document.getElementById('historyContainer');
+
+            let history = [];
+
+            // Live random display
+            setInterval(() => {
+                randomLiveEl.textContent = `Math.random = ${Math.random().toFixed(3)}`;
+            }, 1300);
+
+            // Fonction pour convertir un caractère hex en nombre (0-15)
+            function hexCharToNumber(c) {
+                return parseInt(c, 16);
+            }
+
+            // Générer HEX 3 casses (ex: "4A 7F 2C")
+            function genererHex() {
+                const hex1 = Math.floor(Math.random()*256).toString(16).toUpperCase().padStart(2, '0');
+                const hex2 = Math.floor(Math.random()*256).toString(16).toUpperCase().padStart(2, '0');
+                const hex3 = Math.floor(Math.random()*256).toString(16).toUpperCase().padStart(2, '0');
+                return `${hex1} ${hex2} ${hex3}`;
+            }
+
+            // Extraire heure départ depuis HEX
+            function getHeureDepartFromHex(hexString) {
+                const parts = hexString.split(' '); // ["4A","7F","2C"]
+                
+                // 1er casse → 1er chiffre = heure (0-15)
+                const heure = hexCharToNumber(parts[0][0]); // ex: '4' → 4
+                
+                // 2ème casse → dernier chiffre = minutes (0-15)
+                const minutes = hexCharToNumber(parts[1][1]); // ex: 'F' → 15
+                
+                // 3ème casse → 2 derniers chiffres = secondes (0-255 mais bound 0-59)
+                let secondes = parseInt(parts[2], 16); // ex: "2C" → 44
+                if (secondes > 59) secondes = secondes % 60; // miantoka tsy mihoatra 59
+                
+                return {
+                    heure: Math.min(heure, 23), // 0-23
+                    minutes: Math.min(minutes, 59), // 0-59
+                    secondes: Math.min(secondes, 59)
+                };
+            }
+
+            // Format heure (HH:MM:SS)
+            function formatHeure(h, m, s) {
+                return `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+            }
+
+            // Calculer heure arrivée (+30-90min)
+            function calculerHeureArrive(h, m, s) {
+                const departDate = new Date();
+                departDate.setHours(h, m, s);
+                
+                const duree = 1800 + Math.floor(Math.random() * 3600); // 1800-5400s (30-90min)
+                const arriveDate = new Date(departDate.getTime() + duree * 1000);
+                
+                return {
+                    heure: arriveDate.getHours(),
+                    minutes: arriveDate.getMinutes(),
+                    secondes: arriveDate.getSeconds()
+                };
+            }
+
+            // Générer multiplicateur
+            function genererMultiplier(methode) {
+                let val = 1.0;
+                if (methode === 'predict' || methode === 'multiplier') {
+                    const r = Math.random();
+                    if (r < 0.55) val = 1.0 + Math.random() * 1.0;
+                    else if (r < 0.8) val = 2.0 + Math.random() * 3.0;
+                    else if (r < 0.94) val = 5.0 + Math.random() * 7.0;
+                    else val = 12.0 + Math.random() * 28.0;
+                }
+                else if (methode === 'calculation') {
+                    const now = Date.now();
+                    const ms = (now % 1000) / 100;
+                    const sec = (Math.floor(now / 1000) % 10) / 2;
+                    val = 1.0 + ((ms + sec) % 14.0);
+                }
+                else if (methode === 'mathRandom') {
+                    val = 1.0 + (Math.random() * 49.0);
+                }
+                return Math.round(val * 100) / 100;
+            }
+
+            // Ajouter historique
+            function ajouterHistorique(hex, depart, arrive) {
+                const item = `${hex} | ${depart}→${arrive}`;
+                history.unshift(item);
+                if (history.length > 4) history.pop();
+                
+                if (history.length === 0) {
+                    historyContainer.innerHTML = '';
+                } else {
+                    historyContainer.innerHTML = history.map(h => 
+                        `<span class="history-item">${h}</span>`
+                    ).join('');
+                }
+            }
+
+            // Mise à jour complète
+            function updateAll(methode) {
+                // 1. Multiplier
+                const multi = genererMultiplier(methode);
+                multiplierEl.innerHTML = `${multi.toFixed(2)}<small>x</small>`;
+                resultEl.textContent = multi.toFixed(2) + 'x';
+                
+                // 2. Générer HEX
+                const hex = genererHex();
+                hexEl.textContent = hex;
+                
+                // 3. Extraire heure départ depuis HEX
+                const depart = getHeureDepartFromHex(hex);
+                const departStr = formatHeure(depart.heure, depart.minutes, depart.secondes);
+                departEl.textContent = departStr;
+                
+                // 4. Calculer heure arrivée (+30-90min)
+                const arrive = calculerHeureArrive(depart.heure, depart.minutes, depart.secondes);
+                const arriveStr = formatHeure(arrive.heure, arrive.minutes, arrive.secondes);
+                arriveEl.textContent = arriveStr;
+                
+                // 5. Historique
+                ajouterHistorique(hex, departStr, arriveStr);
+            }
+
+            // Boutons
+            document.getElementById('predictBtn').addEventListener('click', () => updateAll('predict'));
+            document.getElementById('multiplierBtn').addEventListener('click', () => updateAll('multiplier'));
+            document.getElementById('calculationBtn').addEventListener('click', () => updateAll('calculation'));
+            document.getElementById('mathRandomBtn').addEventListener('click', () => updateAll('mathRandom'));
+
+            // Premier affichage
+            updateAll('predict');
+        })();
+    </script>
+</body>
+</html>
